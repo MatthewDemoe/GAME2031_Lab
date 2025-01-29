@@ -26,6 +26,10 @@ class GameOverScene : SKScene {
     }
     
     func setUpScene(){
+        let node = self.childNode(withName: "//GameOverLabel")
         
+        guard let label = node as? SKLabelNode else { return }
+        label.numberOfLines = 0
+        label.text = "Game Over! :( \nFinal Score: \(ScoreTracker.instance.score)"
     }
 }
