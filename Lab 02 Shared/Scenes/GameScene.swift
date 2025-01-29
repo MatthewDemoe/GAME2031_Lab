@@ -36,7 +36,6 @@ class GameScene: SKScene {
         
         timerLabel = TimerLabel(rootNode: self)
         levelTimer?.addObserver(timerLabel!)
-        
     }
     
     override func didMove(to view: SKView) {

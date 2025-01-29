@@ -6,24 +6,23 @@
 //
 import SpriteKit
 
-class TimerLabel : Observer{
+class TimerLabel : Observer {
     var timerLabel: SKLabelNode
-    var view: SKView
     
-    init(rootNode: SKNode) {
+    init(rootNode: SKScene) {
         self.timerLabel = SKLabelNode()
         self.timerLabel = SKLabelNode.init(text: "Remaining Time: ...")
-        self.timerLabel.position.y = (UIScreen.main.bounds.height) * 0.5
         self.timerLabel.fontSize = 80
         
-        rootNode.addChild(timerLabel)
+        self.timerLabel.position.y =  rootNode.bounds.maxY - timerLabel.bounds.height
+        self.timerLabel.position.x = rootNode.bounds.minX + timerLabel.bounds.maxX + 100
         
-        self.view = (rootNode.scene?.view)!
+        rootNode.addChild(timerLabel)
     }
     
     func update(_ context: Context){
         if let timerContext = context as? TimerContext{
-            timerLabel.text = "Remaining Time: \(Int(timerContext.remainingTime))" //String(format: "Remaining Time %.1f", remainingTime)//
+            timerLabel.text = String(format: "Remaining Time %.1f", timerContext.remainingTime)
         }
     }
 }

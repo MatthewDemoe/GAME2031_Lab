@@ -6,16 +6,26 @@
 //
 import SpriteKit
 
-class Player {
+class Player : SKShapeNode {
     private var moveSpeed: CGFloat = 0.5
-    private let playerShape: SKShapeNode = SKShapeNode.init(circleOfRadius: 50)
-    
-    
-    init(rootNode: SKNode) {
-        rootNode.addChild(playerShape)
+    private var size: CGFloat = 100
+
+    init(rootNode: SKScene) {
+        super.init()
+        
+        //path is the lines making up the shape node
+        path = SKShapeNode(circleOfRadius: size).path
+        strokeColor =  SKColor.black
+        fillColor = SKColor.white
+        
+        rootNode.addChild(self)
     }
     
     func move(location: CGPoint){
-        playerShape.run(SKAction.move(to: location, duration: moveSpeed))
+        run(SKAction.move(to: location, duration: moveSpeed))
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
