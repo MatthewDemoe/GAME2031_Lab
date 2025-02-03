@@ -7,10 +7,10 @@
 
 import SpriteKit
 
-class Player : SKShapeNode, GameObject, Observer {
-    
-    private let size: CGFloat = 50
-    private var moveSpeed: CGFloat = 350.0
+class Player : SKShapeNode, Observer {
+    private var score: Int = 0
+    private let size: CGFloat = 100
+    private var moveSpeed: CGFloat = 700.0
     
     init(rootNode: SKScene) {
         super.init()
@@ -31,6 +31,8 @@ class Player : SKShapeNode, GameObject, Observer {
         
         strokeColor = SKColor.black
         fillColor = SKColor.white
+        
+        CollisionSubject.instance.addObserver(self)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -46,20 +48,17 @@ class Player : SKShapeNode, GameObject, Observer {
     }
     
     func collidedWith(object: SKNode){
-        guard object is Item else { return }
-        
         if object is Collectable {
             
-            ScoreTracker.instance.score += 1
+            score += 1
+            print("Score: \(score)")
             run(SKAction.playSoundFileNamed("Ding.wav", waitForCompletion: false))
-        } else {
-            
-            ScoreTracker.instance.score -= 1
-            run(SKAction.playSoundFileNamed("Buzzer.wav", waitForCompletion: false))
         }
     }
     
     func update(_ context: Context){
+        print("Player collided")
+        
         guard let collisionContext = context as? CollisionContext else { return }
         if !collisionContext.nodes.contains(self) { return }
         

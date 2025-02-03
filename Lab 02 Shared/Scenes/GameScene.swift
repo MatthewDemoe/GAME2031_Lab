@@ -7,7 +7,7 @@
 
 import SpriteKit
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
     
     class func newGameScene() -> GameScene {
         // Load 'GameScene.sks' as an SKScene.
@@ -28,18 +28,27 @@ class GameScene: SKScene {
     var levelTimer: LevelTimer?
     var timerLabel: TimerLabel?
     
+    var itemSpawner: ItemSpawner?
+    
     func setUpScene() {
         player = Player(rootNode: self)
         
-        levelTimer = LevelTimer(levelTime: 10, rootNode: self)
+        levelTimer = LevelTimer(levelTime: 30, rootNode: self)
         levelTimer?.addObserver(GameStateObserver(view: self.view!))
         
         timerLabel = TimerLabel(rootNode: self)
         levelTimer?.addObserver(timerLabel!)
+        physicsWorld.contactDelegate = self
+        
+        itemSpawner = ItemSpawner(gameScene: self)
     }
     
     override func didMove(to view: SKView) {
         self.setUpScene()
+    }
+    
+    override func willMove(from view: SKView){
+        itemSpawner?.stop()
     }
     
     override func update(_ currentTime: TimeInterval) {
@@ -68,5 +77,12 @@ class GameScene: SKScene {
         }
         
         player?.move(location: touch.location(in: self))
+    }
+    
+    func didBegin(_ contact: SKPhysicsContact){
+        guard let nodeA = contact.bodyA.node else { return }
+        guard let nodeB = contact.bodyB.node else { return }
+        
+        CollisionSubject.instance.notifyObservers(CollisionContext(nodes: [nodeA, nodeB]))
     }
 }

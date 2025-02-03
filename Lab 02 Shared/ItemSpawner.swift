@@ -15,7 +15,7 @@ class ItemSpawner {
     init(gameScene: SKScene) {
         self.gameScene = gameScene
         
-        self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true){
+        self.timer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true){
             _ in
             self.spawnItem()
         }
@@ -26,14 +26,10 @@ class ItemSpawner {
     }
     
     func spawnItem(){
-        let rand = Int.random(in: 0...1)
+        let startX = Double.random(in: gameScene.frame.minX ... gameScene.frame.maxX)
         
-        var spawnedItem: Item
-        
-        if(rand > 0){
-            spawnedItem = Collectable(gameScene: gameScene)
-        }else{
-            spawnedItem = Obstacle(gameScene: gameScene)
-        }
+        let spawnedItem = Collectable(gameScene: gameScene)
+        spawnedItem.position = CGPoint(x: startX, y: gameScene.frame.maxY + spawnedItem.frame.maxY)
+
     }
 }
